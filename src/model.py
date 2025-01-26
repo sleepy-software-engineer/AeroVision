@@ -3,13 +3,15 @@ import torch.nn as nn
 
 
 class PatchEmbedding(nn.Module):
-    def __init__(self, img_size=32, patch_size=4, in_chans=3, embed_dim=64):
+    def __init__(
+        self, img_size: int, patch_size: int, in_chans: int, embed_dim: int
+    ) -> None:
         super().__init__()
         self.num_patches = (img_size // patch_size) ** 2
         self.patch_size = patch_size
         self.proj = nn.Linear(patch_size * patch_size * in_chans, embed_dim)
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         B, C, H, W = x.shape
         x = x.unfold(2, self.patch_size, self.patch_size).unfold(
             3, self.patch_size, self.patch_size
@@ -20,12 +22,20 @@ class PatchEmbedding(nn.Module):
         return x
 
 
-class ViT(nn.Module):
+class TinyViT(nn.Module):
     def __init__(
-        self, num_classes=10, embed_dim=64, num_heads=4, num_layers=6, mlp_dim=256
-    ):
+        self,
+        num_classes: int,
+        embed_dim: int,
+        img_size: int,
+        patch_size: int,
+        in_chans: int,
+        num_heads: int,
+        num_layers: int,
+        mlp_dim: int,
+    ) -> None:
         super().__init__()
-        self.patch_embed = PatchEmbedding(embed_dim=embed_dim)
+        self.patch_embed = PatchEmbedding(img_size, patch_size, in_chans, embed_dim)
         self.cls_token = nn.Parameter(torch.zeros(1, 1, embed_dim))
         self.pos_embed = nn.Parameter(
             torch.zeros(1, self.patch_embed.num_patches + 1, embed_dim)
@@ -42,11 +52,12 @@ class ViT(nn.Module):
             activation="gelu",
             batch_first=True,
         )
+
         self.transformer = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
         self.norm = nn.LayerNorm(embed_dim)
         self.classifier = nn.Linear(embed_dim, num_classes)
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         B = x.shape[0]
         x = self.patch_embed(x)
         cls_token = self.cls_token.expand(B, -1, -1)
