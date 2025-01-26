@@ -7,9 +7,7 @@ class PatchEmbedding(nn.Module):
         super().__init__()
         self.num_patches = (img_size // patch_size) ** 2
         self.patch_size = patch_size
-        self.proj = nn.Linear(
-            patch_size * patch_size * in_chans, embed_dim
-        )  # Linear projection
+        self.proj = nn.Linear(patch_size * patch_size * in_chans, embed_dim)
 
     def forward(self, x):
         B, C, H, W = x.shape
