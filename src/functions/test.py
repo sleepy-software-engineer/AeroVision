@@ -12,8 +12,16 @@ from sklearn.metrics import (
 )
 from torch.utils.data import DataLoader
 
+from config.config import IMAGES_PATH
+from functions.plots import plot_confusion_matrix
 
-def test(model: torch.nn.Module, test_loader: DataLoader, device: torch.device) -> None:
+
+def test(
+    model: torch.nn.Module,
+    test_loader: DataLoader,
+    device: torch.device,
+    dataset_name: str,
+) -> None:
     model.eval()
     all_preds = []
     all_labels = []
@@ -30,10 +38,12 @@ def test(model: torch.nn.Module, test_loader: DataLoader, device: torch.device) 
     all_preds = np.array(all_preds)
     all_labels = np.array(all_labels)
 
-    compute_metrics(all_labels, all_preds)
+    compute_metrics(all_labels, all_preds, dataset_name)
 
 
-def compute_metrics(all_labels: np.ndarray, all_preds: np.ndarray) -> None:
+def compute_metrics(
+    all_labels: np.ndarray, all_preds: np.ndarray, dataset_name: str
+) -> None:
     accuracy = accuracy_score(all_labels, all_preds)
     f1 = f1_score(all_labels, all_preds, average="macro")
     recall = recall_score(all_labels, all_preds, average="macro")
@@ -47,8 +57,9 @@ def compute_metrics(all_labels: np.ndarray, all_preds: np.ndarray) -> None:
         "recall": recall,
         "mcc": mcc,
         "precision": precision,
-        "confusion_matrix": conf_matrix,
     }
 
-    with open("metrics.json", "w") as f:
+    with open(IMAGES_PATH + "test/" + dataset_name + "/metrics.json", "w") as f:
         json.dump(metrics, f)
+
+    plot_confusion_matrix(conf_matrix, dataset_name)
