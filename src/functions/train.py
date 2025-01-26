@@ -20,6 +20,7 @@ def train(
     patience: int = 30,
     train_set_size: int = None,
     val_set_size: int = None,
+    dataset_name: str = None,
 ) -> None:
     best_val_acc = 0.0
     best_epoch = 0
@@ -77,7 +78,7 @@ def train(
         if val_acc > best_val_acc:
             best_val_acc = val_acc
             best_epoch = epoch
-            torch.save(model.state_dict(), MODELS_PATH + "best_model.pth")
+            torch.save(model.state_dict(), MODELS_PATH + dataset_name + "/model.pth")
             logger.info(
                 f"New best model saved at epoch {epoch + 1} with val acc {val_acc * 100:.2f}%"
             )
@@ -88,5 +89,5 @@ def train(
             )
             break
 
-    plot_losses(train_losses, val_losses)
-    plot_accuracies(train_accs, val_accs)
+    plot_losses(train_losses, val_losses, dataset_name)
+    plot_accuracies(train_accs, val_accs, dataset_name)
