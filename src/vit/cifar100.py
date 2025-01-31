@@ -75,7 +75,7 @@ def cifar_100():
         criterion,
         optimizer,
         device,
-        100,
+        1000,
         25,
         len(train_subset),
         len(val_subset),
