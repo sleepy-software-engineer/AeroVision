@@ -1,16 +1,21 @@
-from core.cifar100 import cifar_100
 from logger.LoggerFactory import LoggerFactory
 
+# todo: import the models
 logger = LoggerFactory.get_logger(__name__)
 
 
-def main():
-    logger.info("Running the Dataset")
-    # cifar_10()
-    # stl_10()
-    cifar_100()
-    logger.info("Finished running the Dataset")
+def vit_model():
+    logger.info("Running the ViT Model with the Datasets (Training and Testing)")
+
+    logger.info("Finished running the Tasks")
+
+
+def cnn_model():
+    logger.info("Running the CNN Model with the Datasets (Training and Testing)")
+
+    logger.info("Finished running the Tasks")
 
 
 if __name__ == "__main__":
-    main()
+    vit_model()
+    cnn_model()
