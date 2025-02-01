@@ -3,7 +3,7 @@ from typing import List
 import matplotlib.pyplot as plt
 import numpy as np
 
-from config.config import IMAGES_PATH
+from config.config import OUTPUT_PATH
 
 
 def plot_losses(
@@ -19,7 +19,7 @@ def plot_losses(
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
     plt.legend()
-    plt.savefig(IMAGES_PATH + "train/" + dataset_name + "/" + model_name + "/loss.png")
+    plt.savefig(OUTPUT_PATH + "train/" + dataset_name + "/" + model_name + "/loss.png")
 
 
 def plot_accuracies(
@@ -33,7 +33,7 @@ def plot_accuracies(
     plt.ylabel("Accuracy")
     plt.legend()
     plt.savefig(
-        IMAGES_PATH + "train/" + dataset_name + "/" + model_name + "/accuracy.png"
+        OUTPUT_PATH + "train/" + dataset_name + "/" + model_name + "/accuracy.png"
     )
 
 
@@ -48,7 +48,7 @@ def plot_confusion_matrix(
     plt.ylabel("True Labels")
     plt.grid(False)
     plt.savefig(
-        IMAGES_PATH
+        OUTPUT_PATH
         + "test/"
         + dataset_name
         + "/"

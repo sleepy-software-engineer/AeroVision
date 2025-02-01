@@ -12,7 +12,7 @@ from sklearn.metrics import (
 )
 from torch.utils.data import DataLoader
 
-from config.config import IMAGES_PATH
+from config.config import OUTPUT_PATH
 from functions.plots import plot_confusion_matrix
 
 
@@ -61,7 +61,7 @@ def compute_metrics(
     }
 
     with open(
-        IMAGES_PATH + "test/" + dataset_name + "/" + model_name + "/metrics.json", "w"
+        OUTPUT_PATH + "test/" + dataset_name + "/" + model_name + "/metrics.json", "w"
     ) as f:
         json.dump(metrics, f)
 
