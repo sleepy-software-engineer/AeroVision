@@ -21,6 +21,7 @@ def test(
     test_loader: DataLoader,
     device: torch.device,
     dataset_name: str,
+    model_name: str,
 ) -> None:
     model.eval()
     all_preds = []
@@ -38,11 +39,11 @@ def test(
     all_preds = np.array(all_preds)
     all_labels = np.array(all_labels)
 
-    compute_metrics(all_labels, all_preds, dataset_name)
+    compute_metrics(all_labels, all_preds, dataset_name, model_name)
 
 
 def compute_metrics(
-    all_labels: np.ndarray, all_preds: np.ndarray, dataset_name: str
+    all_labels: np.ndarray, all_preds: np.ndarray, dataset_name: str, model_name: str
 ) -> None:
     accuracy = accuracy_score(all_labels, all_preds)
     f1 = f1_score(all_labels, all_preds, average="macro")
@@ -59,7 +60,9 @@ def compute_metrics(
         "precision": precision,
     }
 
-    with open(IMAGES_PATH + "test/" + dataset_name + "/metrics.json", "w") as f:
+    with open(
+        IMAGES_PATH + "test/" + dataset_name + "/" + model_name + "/metrics.json", "w"
+    ) as f:
         json.dump(metrics, f)
 
-    plot_confusion_matrix(conf_matrix, dataset_name)
+    plot_confusion_matrix(conf_matrix, dataset_name, model_name)

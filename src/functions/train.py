@@ -1,8 +1,9 @@
+from copy import deepcopy
+
 import torch
 from torch import nn, optim
 from torch.utils.data import DataLoader
 
-from config.config import MODELS_PATH
 from functions.plots import plot_accuracies, plot_losses
 from logger.LoggerFactory import LoggerFactory
 
@@ -21,6 +22,7 @@ def train(
     train_set_size: int = None,
     val_set_size: int = None,
     dataset_name: str = None,
+    model_name: str = None,
 ) -> None:
     best_val_acc = 0.0
     best_epoch = 0
@@ -78,7 +80,7 @@ def train(
         if val_acc > best_val_acc:
             best_val_acc = val_acc
             best_epoch = epoch
-            torch.save(model.state_dict(), MODELS_PATH + dataset_name + "/model.pth")
+            best_model_wts = deepcopy(model.state_dict())
             logger.info(
                 f"New best model saved at epoch {epoch + 1} with val acc {val_acc * 100:.2f}%"
             )
@@ -89,5 +91,8 @@ def train(
             )
             break
 
-    plot_losses(train_losses, val_losses, dataset_name)
-    plot_accuracies(train_accs, val_accs, dataset_name)
+    plot_losses(train_losses, val_losses, dataset_name, model_name)
+    plot_accuracies(train_accs, val_accs, dataset_name, model_name)
+
+    model.load_state_dict(best_model_wts)
+    return model
