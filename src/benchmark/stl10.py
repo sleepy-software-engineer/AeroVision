@@ -1,9 +1,17 @@
 import torch
 import torch.nn as nn
-from torch.utils.data import DataLoader, random_split
+from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 
-from functions.dataset import TransformSubset
+from config.config import (
+    BATCH_SIZE,
+    EPOCHS,
+    LABEL_SMOOTHING,
+    LEARNING_RATE,
+    PATIENCE,
+    STL10,
+    WEIGHT_DECAY,
+)
 from functions.test import test
 from functions.train import train
 from logger.LoggerFactory import LoggerFactory
@@ -30,27 +38,22 @@ def stl_10(model: nn.Module, model_name: str):
             transforms.Normalize((0.4467, 0.4398, 0.4066), (0.2603, 0.2566, 0.2713)),
         ]
     )
-    raw_train_set = datasets.STL10(
-        root="./data", split="train", download=True, transform=None
+
+    train_set = datasets.STL10(
+        root="./data", split="train", download=True, transform=train_transform
     )
-
-    train_size = int(0.8 * len(raw_train_set))
-    val_size = len(raw_train_set) - train_size
-    train_subset, val_subset = random_split(raw_train_set, [train_size, val_size])
-
-    train_dataset = TransformSubset(train_subset, transform=train_transform)
-    val_dataset = TransformSubset(val_subset, transform=test_transform)
 
     test_set = datasets.STL10(
         root="./data", split="test", download=True, transform=test_transform
     )
 
-    train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=64, shuffle=False)
-    test_loader = DataLoader(test_set, batch_size=64, shuffle=False)
+    train_loader = DataLoader(train_set, batch_size=BATCH_SIZE, shuffle=True)
+    test_loader = DataLoader(test_set, batch_size=BATCH_SIZE, shuffle=False)
 
-    criterion = nn.CrossEntropyLoss(label_smoothing=0.1)
-    optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3, weight_decay=0.1)
+    criterion = nn.CrossEntropyLoss(label_smoothing=LABEL_SMOOTHING)
+    optimizer = torch.optim.AdamW(
+        model.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY
+    )
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
@@ -58,16 +61,13 @@ def stl_10(model: nn.Module, model_name: str):
     model = train(
         model,
         train_loader,
-        val_loader,
         criterion,
         optimizer,
         device,
-        100,
-        25,
-        len(train_subset),
-        len(val_subset),
-        "stl10",
+        EPOCHS,
+        PATIENCE,
+        STL10,
         model_name,
     )
 
-    test(model, test_loader, device, "stl10", model_name)
+    test(model, test_loader, device, STL10, model_name)

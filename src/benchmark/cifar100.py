@@ -1,9 +1,17 @@
 import torch
 import torch.nn as nn
-from torch.utils.data import DataLoader, random_split
+from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 
-from functions.dataset import TransformSubset
+from config.config import (
+    BATCH_SIZE,
+    CIFAR100,
+    EPOCHS,
+    LABEL_SMOOTHING,
+    LEARNING_RATE,
+    PATIENCE,
+    WEIGHT_DECAY,
+)
 from functions.test import test
 from functions.train import train
 from logger.LoggerFactory import LoggerFactory
@@ -31,27 +39,21 @@ def cifar_100(model: nn.Module, model_name: str):
         ]
     )
 
-    raw_train_set = datasets.CIFAR100(
-        root="./data", train=True, download=True, transform=None
+    train_set = datasets.CIFAR100(
+        root="./data", train=True, download=True, transform=train_transform
     )
-
-    train_size = int(0.8 * len(raw_train_set))
-    val_size = len(raw_train_set) - train_size
-    train_subset, val_subset = random_split(raw_train_set, [train_size, val_size])
-
-    train_dataset = TransformSubset(train_subset, transform=train_transform)
-    val_dataset = TransformSubset(val_subset, transform=test_transform)
 
     test_set = datasets.CIFAR100(
         root="./data", train=False, download=True, transform=test_transform
     )
 
-    train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=64, shuffle=False)
-    test_loader = DataLoader(test_set, batch_size=64, shuffle=False)
+    train_loader = DataLoader(train_set, batch_size=BATCH_SIZE, shuffle=True)
+    test_loader = DataLoader(test_set, batch_size=BATCH_SIZE, shuffle=False)
 
-    criterion = nn.CrossEntropyLoss(label_smoothing=0.1)
-    optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3, weight_decay=0.1)
+    criterion = nn.CrossEntropyLoss(label_smoothing=LABEL_SMOOTHING)
+    optimizer = torch.optim.AdamW(
+        model.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY
+    )
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
@@ -59,16 +61,13 @@ def cifar_100(model: nn.Module, model_name: str):
     model = train(
         model,
         train_loader,
-        val_loader,
         criterion,
         optimizer,
         device,
-        100,
-        25,
-        len(train_subset),
-        len(val_subset),
-        "cifar100",
+        EPOCHS,
+        PATIENCE,
+        CIFAR100,
         model_name,
     )
 
-    test(model, test_loader, device, "cifar100", model_name)
+    test(model, test_loader, device, CIFAR100, model_name)
