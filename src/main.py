@@ -8,9 +8,6 @@ from models.TinyViT import TinyViT
 logger = LoggerFactory.get_logger(__name__)
 
 
-# TinyViT processes
-
-
 def run_cifar10_tinyvit():
     logger.info("Running TinyViT on CIFAR10")
     model = TinyViT(
@@ -59,9 +56,6 @@ def run_stl10_tinyvit():
     logger.info("Finished TinyViT on STL10")
 
 
-# CNN processes
-
-
 def run_cifar10_cnn():
     logger.info("Running CNN on CIFAR10")
     model = CNN(num_classes=10)
@@ -86,7 +80,6 @@ def run_stl10_cnn():
 if __name__ == "__main__":
     processes = []
 
-    # Create a process for each model/dataset combination
     processes.append(Process(target=run_cifar10_tinyvit))
     processes.append(Process(target=run_cifar100_tinyvit))
     processes.append(Process(target=run_stl10_tinyvit))
@@ -94,11 +87,9 @@ if __name__ == "__main__":
     processes.append(Process(target=run_cifar100_cnn))
     processes.append(Process(target=run_stl10_cnn))
 
-    # Start all processes
     for proc in processes:
         proc.start()
 
-    # Wait for all processes to complete
     for proc in processes:
         proc.join()
 
