@@ -1,1 +1,1 @@
-# ComputerVision
+# Tiny ViT: A Tiny Vision Transformer for Image Classification

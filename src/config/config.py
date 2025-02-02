@@ -1,0 +1,10 @@
+OUTPUT_PATH = "/home/lucian/University/MSc-Courses/ComputerVision/src/output/"
+BATCH_SIZE = 64
+LABEL_SMOOTHING = 0.1
+WEIGHT_DECAY = 0.05
+LEARNING_RATE = 3e-4
+PATIENCE = 25
+EPOCHS = 100
+CIFAR10 = "cifar10"
+CIFAR100 = "cifar100"
+STL10 = "stl10"
