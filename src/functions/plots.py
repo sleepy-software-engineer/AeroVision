@@ -8,33 +8,16 @@ from config.config import OUTPUT_PATH
 
 def plot_losses(
     train_losses: List[float],
-    val_losses: List[float],
     dataset_name: str,
     model_name: str,
 ) -> None:
     plt.figure(figsize=(12, 5))
     plt.subplot(1, 2, 1)
     plt.plot(train_losses, label="Train Loss")
-    plt.plot(val_losses, label="Val Loss")
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
     plt.legend()
     plt.savefig(OUTPUT_PATH + "train/" + dataset_name + "/" + model_name + "/loss.png")
-
-
-def plot_accuracies(
-    train_accs: List[float], val_accs: List[float], dataset_name: str, model_name: str
-) -> None:
-    plt.figure(figsize=(12, 5))
-    plt.subplot(1, 2, 2)
-    plt.plot(train_accs, label="Train Acc")
-    plt.plot(val_accs, label="Val Acc")
-    plt.xlabel("Epoch")
-    plt.ylabel("Accuracy")
-    plt.legend()
-    plt.savefig(
-        OUTPUT_PATH + "train/" + dataset_name + "/" + model_name + "/accuracy.png"
-    )
 
 
 def plot_confusion_matrix(
