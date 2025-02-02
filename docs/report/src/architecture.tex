@@ -7,10 +7,11 @@
 
 \section{Architecture}
 
-In recent years, the Transformer architecture—originally developed for natural language processing—has been successfully applied to computer vision tasks. The Vision Transformer (ViT) rethinks image classification by treating an image as a sequence of patches, much like tokens in a sentence, and processes them using standard Transformer blocks. In this chapter, we detail the architecture of the Vision Transformer and provide the mathematical foundations underlying its design.
+In recent years, the Transformer architecture originally developed for natural language processing has been successfully applied to computer vision tasks. The Vision Transformer (ViT) rethinks image classification by treating an image as a sequence of patches, much like tokens in a sentence, and processes them using standard Transformer blocks. In this chapter, we detail the architecture of the Vision Transformer and provide the mathematical foundations underlying its design.
 
 \subsection{Overview}
-The Vision Transformer (ViT) adapts the Transformer architecture—originally developed for natural language processing—to image classification tasks. Instead of processing an image as a whole, ViT divides it into a sequence of patches (analogous to tokens) and processes these patches through a stack of Transformer encoder blocks. The key steps in the ViT pipeline are:
+The Vision Transformer (ViT) adapts the Transformer architecture originally developed for natural language processing to image classification tasks. Instead of processing an image as a whole, ViT divides it into a sequence of patches (analogous to tokens) and processes these patches through a stack of Transformer encoder blocks. The key steps in the ViT pipeline are:
+
 \begin{enumerate}
     \item \textbf{Image Patch Embedding}: The input image is divided into fixed-size patches that are flattened and projected into a latent space.
     \item \textbf{Positional Encoding}: Since Transformers are permutation-invariant, positional embeddings are added to the patch embeddings.
@@ -35,12 +36,11 @@ N = \frac{HW}{P^2}.
 
 Each patch, denoted as \(\mathbf{x}_p \in \mathbb{R}^{P \times P \times C}\), is flattened into a vector of dimension \(P^2 \cdot C\). A learnable linear projection (implemented as a fully connected layer) maps this vector into a \(D\)-dimensional embedding space:
 
-\vspace{-\baselineskip} % Adjust spacing if needed
-\begin{align}
-    \mathbf{z}_p &= \mathbf{W}_e \mathbf{x}_p + \mathbf{b}_e, \nonumber \\
-    \text{where } & \mathbf{W}_e \in \mathbb{R}^{D \times (P^2 \cdot C)} \text{ and } \mathbf{b}_e \in \mathbb{R}^{D}.
-\end{align}
-\vspace{-\baselineskip} % Adjust spacing if needed
+\begin{equation}
+    \mathbf{z}_p = \mathbf{W}_e \mathbf{x}_p + \mathbf{b}_e
+\end{equation}
+
+where $\mathbf{W}_e \in \mathbb{R}^{D \times (P^2 \cdot C)} \text{ and } \mathbf{b}_e \in \mathbb{R}^{D}$.
 
 After processing all patches, we obtain a sequence of embeddings:
 
@@ -48,4 +48,100 @@ After processing all patches, we obtain a sequence of embeddings:
 \mathbf{Z} = \left[\mathbf{z}_1, \mathbf{z}_2, \dots, \mathbf{z}_N\right] \in \mathbb{R}^{N \times D}.
 \end{equation}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Positional Encoding}
+
+Transformers do not inherently capture the order or spatial structure of input data. To inject spatial information, learnable positional embeddings are added to the patch embeddings. Let:
+\begin{equation}
+\mathbf{E}_{\text{pos}} \in \mathbb{R}^{N \times D}
+\end{equation}
+
+be a set of positional embeddings. The combined input to the Transformer encoder is then:
+\begin{equation}
+\mathbf{Z}_0 = \mathbf{Z} + \mathbf{E}_{\text{pos}}.
+\end{equation}
+
+In some implementations, a special class token \(\mathbf{z}_{\text{cls}} \in \mathbb{R}^{D}\) is prepended to the sequence:
+\begin{equation}
+\mathbf{Z}_0 = \left[\mathbf{z}_{\text{cls}}, \mathbf{z}_1, \dots, \mathbf{z}_N \right].
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Transformer Encoder Blocks}
+
+The Vision Transformer uses a stack of \(L\) Transformer encoder blocks. Each block is composed of two main components: the Multi-Head Self-Attention (MHSA) mechanism and a Feed-Forward Network (FFN). Layer normalization (LN) and residual connections are applied around each component.
+
+\textbf{Multi-Head Self-Attention (MHSA)}
+
+Let \(\mathbf{Z}^{(l-1)} \in \mathbb{R}^{M \times D}\) be the input to the \(l\)-th encoder block, where \(M\) is the number of tokens (including the class token if used).
+
+\textbf{Query, Key, and Value}
+
+The input is projected into query (\(\mathbf{Q}\)), key (\(\mathbf{K}\)), and value (\(\mathbf{V}\)) matrices using learnable projection matrices \(\mathbf{W}_Q, \mathbf{W}_K, \mathbf{W}_V \in \mathbb{R}^{D \times D}\):
+
+\begin{equation}
+\mathbf{Q} = \mathbf{Z}^{(l-1)} \mathbf{W}_Q, \quad \mathbf{K} = \mathbf{Z}^{(l-1)} \mathbf{W}_K, \quad \mathbf{V} = \mathbf{Z}^{(l-1)} \mathbf{W}_V.
+\end{equation}
+
+For multi-head attention, these are divided into \(h\) heads. For head \(i\) (\(i=1,\dots,h\)), we have:
+\begin{equation}
+    \mathbf{Q}_i, \mathbf{K}_i, \mathbf{V}_i \in \mathbb{R}^{M \times d}, \quad \text{with } d = \frac{D}{h}.
+\end{equation}
+
+\textbf{Scaled Dot-Product Attention}
+
+For head \(i\), the attention is computed as:
+\[
+\text{Attention}_i(\mathbf{Q}_i, \mathbf{K}_i, \mathbf{V}_i) = \text{softmax}\left(\frac{\mathbf{Q}_i \mathbf{K}_i^\top}{\sqrt{d}}\right) \mathbf{V}_i.
+\]
+The scaling by \(\sqrt{d}\) ensures numerical stability.
+
+\textbf{Concatenation and Final Projection}
+
+The outputs from all \(h\) heads are concatenated and projected:
+\[
+\text{MultiHead}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) = \text{Concat}\left(\text{Attention}_1, \dots, \text{Attention}_h\right) \mathbf{W}_O,
+\]
+with \(\mathbf{W}_O \in \mathbb{R}^{D \times D}\) being a learned projection matrix.
+
+\textbf{Residual Connection and Normalization}
+
+A residual connection and layer normalization are applied:
+\[
+\mathbf{Z}^{\prime(l)} = \text{LN}\left(\mathbf{Z}^{(l-1)} + \text{MultiHead}(\mathbf{Q}, \mathbf{K}, \mathbf{V})\right).
+\]
+
+\textbf{Feed-Forward Network (FFN)}
+
+Each encoder block contains a two-layer FFN applied to each token independently:
+
+\begin{equation}
+    \text{FFN}(\mathbf{z}) = \text{GELU}\left(\mathbf{z} \mathbf{W}_1 + \mathbf{b}_1\right) \mathbf{W}_2 + \mathbf{b}_2,
+\end{equation}
+
+where:
+\begin{itemize}
+    \item \(\mathbf{W}_1 \in \mathbb{R}^{D \times D_{\text{ff}}}\),
+    \item \(\mathbf{W}_2 \in \mathbb{R}^{D_{\text{ff}} \times D}\),
+    \item \(D_{\text{ff}}\) is the dimension of the hidden layer,
+    \item GELU is the Gaussian Error Linear Unit activation.
+\end{itemize}
+
+A residual connection and layer normalization follow:
+\begin{equation}
+    \mathbf{Z}^{(l)} = \text{LN}\left(\mathbf{Z}^{\prime(l)} + \text{FFN}(\mathbf{Z}^{\prime(l)})\right).
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Classification Head}
+
+For classification tasks, the output corresponding to the class token (or a pooled representation of all tokens) is used. For instance, if a class token \(\mathbf{z}_{\text{cls}}\) is used, the final prediction is obtained as:
+
+\begin{equation}
+\hat{y} = \text{softmax}\left(\mathbf{W}_c \mathbf{z}_{\text{cls}} + \mathbf{b}_c\right),
+\end{equation}
+
+where \(\mathbf{W}_c \in \mathbb{R}^{K \times D}\) and \(\mathbf{b}_c \in \mathbb{R}^{K}\) are the weights and bias of the classification layer, and \(K\) is the number of classes. Alternatively, a global average pooling can be applied to the token embeddings before the linear projection.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
