@@ -1,7 +1,7 @@
 \documentclass[a4paper]{article}
 \usepackage{graphicx}
 \usepackage{library}
-\usepackage{xcolor} 
+\usepackage{xcolor}
 \usepackage{hyperref}
 \usepackage{float}
 \usepackage{tikz}
@@ -10,25 +10,30 @@
 \usepackage{geometry}
 \usepackage{subcaption}
 \usepackage{multicol}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{siunitx}
 \usetikzlibrary{shapes.geometric, arrows}
 \usetikzlibrary{positioning}
 \usetikzlibrary{arrows.meta, shapes.geometric, calc, positioning}
 \setlength{\parskip}{0.5pt}
 
 \hypersetup{
-    colorlinks=true,
-    linkcolor=blue,
-    citecolor=red,
-    filecolor=magenta,
-    urlcolor=cyan
+  colorlinks=true,
+  linkcolor=blue,
+  citecolor=red,
+  filecolor=magenta,
+  urlcolor=cyan
 }
 
-\title{TinyViT: A Small Vision Transformer for Image Classification}
+\title{TinyViT: A Small Vision Transformer}
 
 \author{
-Lucian Dorin Crainic\\ 
-Department of Computer Science \\
-crainic.1938430@studenti.uniroma1.it
+  Lucian Dorin Crainic\\
+  Department of Computer Science \\
+  crainic.1938430@studenti.uniroma1.it
 }
 
 \institution{La Sapienza University of Rome}
@@ -39,12 +44,12 @@ crainic.1938430@studenti.uniroma1.it
 \input{src/abstract.tex}
 \input{src/introduction.tex}
 \input{src/architecture.tex}
-% \input{src/methodology.tex}
-% \input{src/experimental.tex}
-% \input{src/results.tex}
-% \input{src/conclusion.tex}
+\input{src/model.tex}
+\input{src/datasets.tex}
+\input{src/results.tex}
+\input{src/conclusion.tex}
 
-\bibliographystyle{apalike} 
+\bibliographystyle{apalike}
 \bibliography{bibliography.bib}
 
 \end{document}
