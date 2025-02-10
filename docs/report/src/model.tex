@@ -1,15 +1,9 @@
 \section{Tiny Vision Transformer (Tiny ViT)}
 
-The Vision Transformer (ViT) has proven to be highly effective for image classification by leveraging self-attention mechanisms instead of conventional convolutional operations. Since the original Vision Transformer requires large datasets and significant computational power, TinyViT is designed specifically for smaller datasets and demands less computation. To address this, a compact variant, Tiny Vision Transformer (TinyViT), has been implemented with modifications aimed at efficiency. TinyViT is designed to operate efficiently on smaller images such as 32x32 but can also be adapted for other resolutions like 96x96, dividing them into 4x4 patches, resulting in 64 tokens per image. These patches are projected into an embedding space of 128 dimensions, which serve as input to the Transformer encoder. The model consists of six Transformer layers with eight attention heads each, along with feed-forward networks featuring a hidden dimension of 512. These design choices allow for a balance between model capacity and computational feasibility, leading to approximately 1.21 million trainable parameters.
-
-Compared to standard ViT models, which process high-resolution images with larger patch sizes and higher embedding dimensions, TinyViT scales down key components while maintaining self-attention’s effectiveness. Traditional ViT architectures often employ embedding dimensions over 768 and deeper networks, making them impractical for CIFAR-10. By reducing the embedding dimension, the number of Transformer layers, and the patch size, TinyViT significantly lowers computational requirements while retaining essential representation learning capabilities. This makes it a more accessible and efficient solution for limited-resource environments.
-
-The motivation behind TinyViT is to leverage the advantages of ViT while ensuring feasibility for lower-resolution datasets. Given CIFAR-10’s 32x32 images, a full-scale ViT model would be excessive. By optimizing model depth, embedding dimensions, and MLP hidden size, TinyViT ensures efficient training without compromising performance. The reduced number of parameters makes it compatible with standard GPUs and avoids excessive memory consumption. Ultimately, this lightweight model demonstrates the viability of self-attention mechanisms in small-scale applications, maintaining the benefits of Transformer-based architectures while being resource-efficient.
-
-\begin{table}[ht]
+\begin{table}[htbp]
+  \small
   \centering
   \caption{Parameters of the TinyViT Model for CIFAR-10}
-  \label{tab:tinyvit_params}
   \begin{tabular}{@{}ll@{}}
     \toprule
     \textbf{Parameter} & \textbf{Value} \\
@@ -22,8 +16,14 @@ The motivation behind TinyViT is to leverage the advantages of ViT while ensurin
     Number of Attention Heads & 8 \\
     Number of Transformer Layers & 6 \\
     MLP Hidden Dimension & 512 \\
-    Number of Patches & 64 \\
-    Total Trainable Parameters & $\sim$1.21M \\
     \bottomrule
   \end{tabular}
 \end{table}
+
+The Vision Transformer (ViT) has proven to be highly effective for image classification by using self attention mechanisms instead of conventional convolutional operations. Since the original Vision Transformer requires large datasets and significant computational power, TinyViT is designed specifically for smaller datasets and demands less computation. To address this, a compact variant, Tiny Vision Transformer (TinyViT), has been implemented with modifications aimed at efficiency. TinyViT is designed to operate efficiently on smaller images such as 32x32 but can also be adapted for other resolutions like 96x96, dividing them into 4x4 patches, resulting in 64 tokens per image. These patches are projected into an embedding space of 128 dimensions, which serve as input to the Transformer encoder. The model consists of six Transformer layers with eight attention heads each, along with feed-forward networks featuring a hidden dimension of 512. These design choices allow for a balance between model capacity and computational feasibility, leading to approximately 1.21 million trainable parameters.
+
+Compared to standard ViT models, which process high resolution images with larger patch sizes and higher embedding dimensions, TinyViT scales down key components while maintaining self attention’s effectiveness. Traditional ViT architectures often use embedding dimensions over 768 and deeper networks. By reducing the embedding dimension, the number of Transformer layers, and the patch size, TinyViT significantly lowers computational requirements while retaining essential representation learning capabilities.
+
+The motivation behind TinyViT is to use the advantages of ViT while ensuring possibility for lower resolution datasets. Given CIFAR-10’s 32x32 images, a full-scale ViT model would be excessive. By optimizing model depth, embedding dimensions, and MLP hidden size, TinyViT ensures efficient training without compromising performance. The reduced number of parameters makes it compatible with standard GPUs and avoids excessive memory consumption.
+
+\raggedbottom
