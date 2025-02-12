@@ -1,0 +1,32 @@
+\section{TinyViT}
+
+    \begin{sidepic}{./images/vit-architecture.png}{Side-Picture Slides}
+        \begin{itemize}
+        \item Opened with \texttt{$\backslash$begin\{sidepic\}\{<image>\}\{<title>\}}
+        \item Otherwise, \texttt{sidepic} works just like \texttt{frame}
+        \end{itemize}
+    \end{sidepic}
+
+
+\begin{frame}[fragile]
+    \frametitle{TinyViT Architecture}
+    \begin{table}[htbp]
+        \small
+        \centering
+        \caption{Parameters of the TinyViT Model for CIFAR-10}
+        \begin{tabular}{@{}ll@{}}
+          \toprule
+          \textbf{Parameter} & \textbf{Value} \\
+          \midrule
+          Number of Classes & 10 \\
+          Embedding Dimension & 128 \\
+          Image Size & 32 \\
+          Patch Size & 4 \\
+          Input Channels & 3 \\
+          Number of Attention Heads & 8 \\
+          Number of Transformer Layers & 6 \\
+          MLP Hidden Dimension & 512 \\
+          \bottomrule
+        \end{tabular}
+      \end{table}
+\end{frame}
