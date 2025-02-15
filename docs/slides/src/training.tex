@@ -1,12 +1,21 @@
 \section{Training Setup}
 \begin{frame}{Models Training Setup}
-    Compared to PowerPoint, using \LaTeX\ is better because:
-    \begin{itemize}
-    \item \textbf{Optimizer} : AdamW
-    \item \textbf{Learning Rate} : AdamW
-    \item \textbf{Weight Decay} : AdamW
-    \item \textbf{Loss Function} : AdamW
-    \item \textbf{Epochs} : AdamW
-    \item \textbf{Batch Size} : AdamW
-    \end{itemize}
+  \framesubtitle{What setup was used ? }
+  \textbf{Loss Function: Cross-Entropy with Label Smoothing (0.1)}
+  \begin{equation}
+    L = - \sum_{i} y_i \log \hat{y}_i + (1 - y_i) \log (1 - \hat{y}_i)
+  \end{equation}
+
+  \textbf{Optimizer: AdamW}
+  \begin{equation}
+    \theta_{t+1} = \theta_t - \eta \left( \frac{m_t}{\sqrt{v_t} + \epsilon} \right)
+  \end{equation}
+
+  \textbf{Hyperparameters:}
+  \begin{itemize}
+    \item Learning Rate: $3e^{-4}$
+    \item Weight Decay: $0.05$
+    \item Epochs: 100
+    \item Batch Size: 64
+  \end{itemize}
 \end{frame}
