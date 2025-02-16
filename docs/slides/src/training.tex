@@ -1,12 +1,12 @@
 \section{Training Setup}
 \begin{frame}{Models Training Setup}
   \framesubtitle{What setup was used ? }
-  \textbf{Loss Function: Cross-Entropy with Label Smoothing (0.1)}
+  \textbf{Loss Function}: Cross Entropy with Label Smoothing (0.1)
   \begin{equation}
     L = - \sum_{i} y_i \log \hat{y}_i + (1 - y_i) \log (1 - \hat{y}_i)
   \end{equation}
 
-  \textbf{Optimizer: AdamW}
+  \textbf{Optimizer}: AdamW
   \begin{equation}
     \theta_{t+1} = \theta_t - \eta \left( \frac{m_t}{\sqrt{v_t} + \epsilon} \right)
   \end{equation}

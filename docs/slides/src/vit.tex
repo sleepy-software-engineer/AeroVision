@@ -4,9 +4,8 @@
   \framesubtitle{Patch Embedding and Positional Econding}
   \textbf{Patch Embedding:}
   \begin{itemize}
-    \item Converts images into fixed-size patches.
-    \item Each patch is flattened into a vector and projected into an embedding space.
-    \item Mathematical formulation:
+    \item Converts images into \textbf{fixed size patches}.
+    \item Each patch is flattened into a vector and projected into an \textbf{embedding space}.
       \begin{equation}
         X \in \mathbb{R}^{H \times W \times C} \quad \Rightarrow \quad N = \frac{H \times W}{P^2}
       \end{equation}
@@ -17,7 +16,7 @@
 
   \textbf{Positional Encoding:}
   \begin{itemize}
-    \item Adds spatial information to the patches since transformers lack inherent spatial bias.
+    \item Adds \textbf{spatial information} to the patches since transformers lack inherent \textbf{spatial bias}.
     \item Learnable positional embeddings:
       \begin{equation}
         Z_0 = Z + E_{pos}
@@ -29,8 +28,8 @@
   \framesubtitle{Transformer Encoder and Classification Head}
   \textbf{Transformer Encoder:}
   \begin{itemize}
-    \item Processes the sequence of patch embeddings.
-    \item Consists of multiple layers of Multi-Head Self-Attention (MHSA) and Feed-Forward Networks (FFN).
+    \item Processes the \textbf{sequence} of patch embeddings.
+    \item Consists of multiple layers of \textbf{Multi Head Self Attention} (\textit{MHSA}) and \textbf{Feed Forward Networks} (\textit{FFN}).
       \begin{equation}
         FFN(z) = \text{GELU} (zW_1 + b_1) W_2 + b_2
       \end{equation}
@@ -44,8 +43,8 @@
 
   \textbf{Classification Head:}
   \begin{itemize}
-    \item Uses the class token $ z_{cls} $ for final classification.
-    \item Softmax layer for output prediction:
+    \item Uses the class token $ z_{cls} $ for \textbf{final classification}.
+    \item \textbf{Softmax layer} for output prediction:
       \begin{equation}
         \hat{y} = \text{softmax} (W_c z_{cls} + b_c)
       \end{equation}
@@ -57,10 +56,10 @@
   \begin{columns}
     \begin{column}{\textwidth}
       \begin{itemize}
-        \item CNNs use convolutional layers with local receptive fields.
-        \item ViTs process images globally using self-attention mechanisms.
-        \item CNNs have built-in spatial hierarchies, whereas ViTs rely on attention.
-        \item ViTs typically need more data to perform well but can model long-range dependencies.
+        \item CNNs use \textbf{convolutional layers} with local receptive fields.
+        \item ViTs process images globally using \textbf{self attention} mechanisms.
+        \item CNNs have built in \textbf{spatial hierarchies}, whereas ViTs rely on attention.
+        \item ViTs typically need \textbf{more data} to perform well but can model long range dependencies.
       \end{itemize}
     \end{column}
   \end{columns}
