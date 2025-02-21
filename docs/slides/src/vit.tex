@@ -31,15 +31,15 @@
     \item Processes the \textbf{sequence} of patch embeddings.
     \item Consists of multiple layers of \textbf{Multi Head Self Attention} (\textit{MHSA}) and \textbf{Feed Forward Networks} (\textit{FFN}).
       \begin{equation}
-        FFN(z) = \text{GELU} (zW_1 + b_1) W_2 + b_2
-      \end{equation}
-      \begin{equation}
         Q = Z W_Q, \quad K = Z W_K, \quad V = Z W_V
       \end{equation}
       \begin{equation}
         \text{Attention}(Q, K, V) = \text{softmax} \left( \frac{QK^T}{\sqrt{d}} \right) V
       \end{equation}
-  \end{itemize}
+      \begin{equation}
+        FFN(z) = \text{GELU} (zW_1 + b_1) W_2 + b_2
+      \end{equation}
+    \end{itemize}
 
   \textbf{Classification Head:}
   \begin{itemize}
